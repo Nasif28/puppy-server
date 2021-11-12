@@ -23,6 +23,7 @@ async function run() {
         const breedsCollection = database.collection('breeds');
         const orderCollection = database.collection('orders');
         const usersCollection = database.collection('users');
+        const reviewCollection = database.collection('reviews');
 
         //GET BREEDS API
         app.get('/breeds', async (req, res) => {
@@ -39,7 +40,7 @@ async function run() {
             res.json(places);
         })
 
-        // Add Orders API
+        // ADD ORDER API
         app.post('/order', async (req, res) => {
             const order = req.body;
             const result = await orderCollection.insertOne(order);
@@ -53,7 +54,7 @@ async function run() {
             res.json(result);
         });
 
-        // MAKE ADMIN
+        // ADD USER GOOGLE
         app.put('/users', async (req, res) => {
             const user = req.body;
             const filter = { email: user.email };
@@ -75,25 +76,14 @@ async function run() {
             res.json({ admin: isAdmin });
         })
 
-
-
-        // app.put('/users/admin', verifyToken, async (req, res) => {
-        //     const user = req.body;
-        //     const requester = req.decodedEmail;
-        //     if (requester) {
-        //         const requesterAccount = await usersCollection.findOne({ email: requester });
-        //         if (requesterAccount.role === 'admin') {
-        //             const filter = { email: user.email };
-        //             const updateDoc = { $set: { role: 'admin' } };
-        //             const result = await usersCollection.updateOne(filter, updateDoc);
-        //             res.json(result);
-        //         }
-        //     }
-        //     else {
-        //         res.status(403).json({ message: 'you do not have access to make admin' })
-        //     }
-
-        // })
+        // MAKE ADMIN PUT API
+        app.put('/users/admin', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const updateDoc = { $set: { role: 'admin' } };
+            const result = await usersCollection.updateOne(filter, updateDoc);
+            res.json(result);
+        })
 
         // POST API - ADD NEW BREED
         app.post('/breeds', async (req, res) => {
@@ -154,6 +144,19 @@ async function run() {
             };
             const service = await orderCollection.updateOne(query, updateDoc, options);
             res.send(service);
+        });
+
+        // ADD REVIEW API
+        app.post('/reviewAdd', async (req, res) => {
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
+            res.json(result);
+        });
+
+        // GET ALL REVIEW
+        app.get("/reviewAdd", async (req, res) => {
+            const result = await reviewCollection.find({}).toArray();
+            res.send(result);
         });
     }
 
