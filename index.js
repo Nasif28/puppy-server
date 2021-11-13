@@ -4,7 +4,6 @@ const ObjectId = require('mongodb').ObjectId;
 
 const cors = require('cors');
 require('dotenv').config();
-// const axios = require('axios');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -92,7 +91,7 @@ async function run() {
             res.json(result);
         });
 
-        // DELETE Manage Breeds API
+        // DELETE MANAGE BREEDS API
         app.delete("/manageBreeds/:id", async (req, res) => {
             console.log(req.params.id);
             const result = await breedsCollection.deleteOne({
@@ -107,7 +106,7 @@ async function run() {
             res.send(result);
         });
 
-        // DELETE ManageOrder API
+        // DELETE MANAGEORDER API
         app.delete("/deleteManageOrder/:id", async (req, res) => {
             console.log(req.params.id);
             const result = await orderCollection.deleteOne({
@@ -116,7 +115,7 @@ async function run() {
             res.send(result);
         });
 
-        // GET MyBooking
+        // GET MYORDER
         app.get("/myOrder/:email", async (req, res) => {
             const result = await orderCollection.find({
                 email: req.params.email,
@@ -124,7 +123,7 @@ async function run() {
             res.send(result);
         });
 
-        // DELETE MyBooking API
+        // DELETE MYORDER API
         app.delete("/deleteMyOrder/:id", async (req, res) => {
             const result = await orderCollection.deleteOne({
                 _id: ObjectId(req.params.id),
